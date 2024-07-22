@@ -14,8 +14,6 @@ export default class UserService implements IUserService {
     }
 
     async addUser(dto: UserDto): Promise<UserDto | null> {
-        console.log("Inside the service!");
-        
         const existingUser = await this._repository.findBy({ email: dto.email || "", pseudo: dto.pseudo || "" })
         if(existingUser) {
             throw new ResourceAlreadyExistError({ message: `A user with the email: ${dto.email} or the pseudo ${dto.pseudo} already exist` })
