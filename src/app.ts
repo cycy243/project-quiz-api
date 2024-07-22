@@ -16,7 +16,6 @@ const bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 Container.set<IUserRepository>('user-repo', new UserRepository(User))
 Container.set<IUserService>('user-service', new UserService(Container.get('user-repo')))
