@@ -4,6 +4,7 @@ import { IUserRepository } from "../iUserRepository";
 import { UserDto } from "../../dto/userDto";
 
 import * as mapper from '../../mapper/userMapper'
+import { DataAccessError } from "../../errors/dataAccessError";
 
 export class UserRepository implements IUserRepository {
 
@@ -14,10 +15,20 @@ export class UserRepository implements IUserRepository {
     }
     
     async findBy(args: { email?: String; pseudo?: String; id?: String; }): Promise<IUser | null> {
-        if(args.email) {
-            return await this._model.findOne({$or: [{email: args.email}, {pseudo: args.pseudo}, {id: args.id}]});
+        try {
+            console.info(args)
+            if(args) {
+                return await this._model.findOne({$or: [{email: args.email}, {pseudo: args.pseudo}, {id: args.id}]});
+            }
+            return null;
+        } catch(err) {
+            console.error(err);
+            
+            if(err instanceof mongoose.MongooseError) {
+                throw new DataAccessError({ message: "Error while using mongoose" })
+            }
+            throw err
         }
-        return await this._model.findById(args.id);
     }
 
     async insert(toAdd: IUser): Promise<IUser | null> {
