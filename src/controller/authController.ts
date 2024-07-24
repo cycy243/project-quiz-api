@@ -2,13 +2,14 @@ import { Controller, Param, Body, Get, Post, Put, Delete, JsonController } from 
 import IUserService from '../services/iUserService';
 import { Inject, Service } from 'typedi';
 import { UserDto } from '../dto/userDto';
+import { InjectionKey } from '../utils/injection_key';
 
 @Service()
 @JsonController()
 export class UserController {
     private _service: IUserService
 
-    constructor(@Inject('user-service') service: IUserService) {
+    constructor(@Inject(InjectionKey.USER_SERVICE) service: IUserService) {
         this._service = service
     }
 
