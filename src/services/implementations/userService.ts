@@ -8,7 +8,7 @@ import { InjectionKey } from "../../utils/injection_key";
 import UserCUValidator from "../../validator/userCUValidator";
 import { ValidationError } from "../../errors/validationError";
 
-@Service()
+@Service(InjectionKey.USER_SERVICE)
 export default class UserService implements IUserService {
     private _repository: IUserRepository
     private _crudValidator: UserCUValidator
@@ -23,6 +23,8 @@ export default class UserService implements IUserService {
         if(validationResult.errors.length > 0) {
             throw new ValidationError("A validation error occured", validationResult.errors)
         }
+        console.log(dto);
+        
         const existingUser = await this._repository.findBy({ email: dto.email || "", pseudo: dto.pseudo || "" })
         if(existingUser) {
             throw new ResourceAlreadyExistError({ message: `A user with the email: ${dto.email} or the pseudo ${dto.pseudo} already exist` })

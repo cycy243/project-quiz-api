@@ -5,7 +5,10 @@ import { UserDto } from "../../dto/userDto";
 
 import * as mapper from '../../mapper/userMapper'
 import { DataAccessError } from "../../errors/dataAccessError";
+import { Service } from "typedi";
+import { InjectionKey } from "../../utils/injection_key";
 
+@Service(InjectionKey.USER_REPOSITORY)
 export class UserRepository implements IUserRepository {
 
     private _model: mongoose.Model<IUser>;
@@ -18,7 +21,7 @@ export class UserRepository implements IUserRepository {
         try {
             console.info(args)
             if(args) {
-                return await this._model.findOne({$or: [{email: args.email}, {pseudo: args.pseudo}, {id: args.id}]});
+                return await this._model.findOne({$or: [{email: args.email}, {pseudo: args.pseudo}, {_id: args.id}]});
             }
             return null;
         } catch(err) {
@@ -32,6 +35,10 @@ export class UserRepository implements IUserRepository {
     }
 
     async insert(toAdd: IUser): Promise<IUser | null> {
+        console.log("Type of User bithDate field: " + typeof toAdd.birthDate);
+        console.log("Value of User bithDate field: " + toAdd.birthDate);
+        
+        
         const user = new this._model(toAdd);
         await user.save();
         return user;

@@ -4,7 +4,7 @@ import { IUser } from "../models/user";
 function toDto(user: IUser): UserDto {
     return {
         bio: user.bio.toString(),
-        birthDate: user.birthDate,
+        birthDate: user.birthDate.toDateString(),
         name: user.name.toString(),
         firstname: user.firstname.toString(),
         email: user.email.toString(),
@@ -16,7 +16,7 @@ function toDto(user: IUser): UserDto {
 function toEntity(user: UserDto): IUser {
     return {
         bio: user.bio || "",
-        birthDate: user.birthDate || new Date(),
+        birthDate: new Date(user.birthDate!) || new Date(),
         name: user.name || "",
         firstname: user.firstname || "",
         email: user.email || "",

@@ -45,7 +45,7 @@ describe("UserServiceTests", () => {
                     name: "Testkkhjkh",
                     password: "Password123$",
                     email: "test@mail.com",
-                    birthDate: new Date('15/12/2002'),
+                    birthDate: '15/12/2002',
                     pseudo: "test",
                     bio: "tesklkjt",
                     firstname: "testhjkhjgk",

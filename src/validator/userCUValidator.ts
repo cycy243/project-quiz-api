@@ -1,10 +1,13 @@
 import { Validator } from "fluentvalidation-ts";
 import { UserDto } from "../dto/userDto";
 import { BaseValidator } from "./baseValidator";
+import { Service } from "typedi";
+import { InjectionKey } from "../utils/injection_key";
 
 /**
  * A validator for validating user dto for update and create operation.
  */
+@Service(InjectionKey.USER_CRUD_VALIDATOR)
 export default class UserCUValidator extends BaseValidator<UserDto> {
     constructor() {
         super();
@@ -18,7 +21,7 @@ export default class UserCUValidator extends BaseValidator<UserDto> {
             .maxLength(255).withMessage("The bio should have a maximum length of 255");
         this.ruleFor("birthDate")
             .notNull().withMessage("The birthdate is required")
-            .must(date => Math.abs(new Date().getTime() - (date?.getTime() || 0)) / (1000 * 60 * 60 * 24 * 365.25) >= 13).withMessage("The user should be 13 years old to register");
+            .must(date => Math.abs(new Date().getTime() - ((date ? new Date(date) : new Date()).getTime() || 0)) / (1000 * 60 * 60 * 24 * 365.25) >= 13).withMessage("The user should be 13 years old to register");
         this.ruleFor("firstname")
             .notEmpty().withMessage("The firstname is required")
             .minLength(5).withMessage("The firstname should have a minimum length of 5");

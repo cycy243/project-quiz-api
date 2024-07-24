@@ -42,7 +42,6 @@ export const UserSchema = new mongoose.Schema({
     },
     profilePicUri: {
         type: String,
-        required: true,
     }
 })
 

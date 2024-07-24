@@ -5,7 +5,7 @@ import { UserDto } from '../dto/userDto';
 import { InjectionKey } from '../utils/injection_key';
 
 @Service()
-@JsonController()
+@JsonController('/users')
 export class UserController {
     private _service: IUserService
 
@@ -13,37 +13,27 @@ export class UserController {
         this._service = service
     }
 
-  @Get('/users')
+  @Get('')
   getAll() {
     return 'This action returns all users';
   }
 
-  @Get('/users/:id')
+  @Get('/:id')
   getOne(@Param('id') id: number) {
     return 'This action returns user #' + id;
   }
 
-  @Post('/users')
-  async post(@Body() user: any) {
-    await this._service.addUser({
-        name: "",
-        password: "",
-        email: "",
-        birthDate: new Date(),
-        pseudo: "",
-        bio: "",
-        firstname: "",
-        profilePicUri: ""
-    })
-    return 'Saving user...';
+  @Post('')
+  async post(@Body() user: UserDto) {
+    return await this._service.addUser(user);
   }
 
-  @Put('/users/:id')
+  @Put('/:id')
   put(@Param('id') id: number, @Body() user: any) {
     return 'Updating a user...';
   }
 
-  @Delete('/users/:id')
+  @Delete('/:id')
   remove(@Param('id') id: number) {
     return 'Removing user...';
   }

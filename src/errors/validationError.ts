@@ -1,5 +1,5 @@
 export class ValidationError extends Error {
-    constructor(message: String, private errors: String[]) {
+    constructor(message: String, public errors: String[]) {
         super(message.toString())
     }
 }
