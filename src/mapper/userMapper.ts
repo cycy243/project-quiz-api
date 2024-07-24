@@ -3,13 +3,13 @@ import { IUser } from "../models/user";
 
 function toDto(user: IUser): UserDto {
     return {
-        bio: user.bio,
+        bio: user.bio.toString(),
         birthDate: user.birthDate,
-        name: user.name,
-        firstname: user.firstname,
-        email: user.email,
-        pseudo: user.pseudo,
-        profilePicUri: user.profilePicUri
+        name: user.name.toString(),
+        firstname: user.firstname.toString(),
+        email: user.email.toString(),
+        pseudo: user.pseudo.toString(),
+        profilePicUri: user.profilePicUri.toString()
     }
 }
 

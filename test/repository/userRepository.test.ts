@@ -4,6 +4,10 @@ import User from '../../src/models/user'
 
 import { UserRepository } from '../../src/repository/mongo_repository/userRepository'
 import { IUserRepository } from '../../src/repository/iUserRepository';
+import { MongoError } from 'mongodb';
+import { DataAccessError } from '../../src/errors/dataAccessError';
+import { MongooseError } from 'mongoose';
+import { mock } from 'ts-jest-mocker';
 
 describe("UserRepositoryTests", () => {
     beforeEach(() => {
@@ -58,12 +62,23 @@ describe("UserRepositoryTests", () => {
         })
 
         it("When mongoose throw errors then throw custom error", () => {
-            mockingoose(User).toReturn(new Error("Coucou"), "findOne");
+            // To mock User findOne method, we just need to override it with some jest code 
+
+            jest.mock('../../src/models/user', () => {
+              return {
+                  findOne: jest.fn().mockRejectedValue(new MongooseError(""))
+              }
+            })
 
             const service = new UserRepository(User)
 
             service.findById("").catch(err => {
-                expect(true).toBeTruthy()
+                const result = err instanceof DataAccessError;
+                console.log(err);
+                
+                console.log("error is instanceof DataAccessError: " + result);
+                
+                expect(result).toBeTruthy()
             })
         })
     })

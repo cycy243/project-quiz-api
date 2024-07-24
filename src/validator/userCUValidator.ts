@@ -1,0 +1,37 @@
+import { Validator } from "fluentvalidation-ts";
+import { UserDto } from "../dto/userDto";
+import { BaseValidator } from "./baseValidator";
+
+/**
+ * A validator for validating user dto for update and create operation.
+ */
+export default class UserCUValidator extends BaseValidator<UserDto> {
+    constructor() {
+        super();
+
+        this.ruleFor('email')
+            .notEmpty().withMessage("The email is required")
+            .emailAddress().withMessage("The email should be a valid email");
+        this.ruleFor("bio")
+            .notEmpty().withMessage("The bio is required")
+            .minLength(5).withMessage("The bio should have a minimum length of 5")
+            .maxLength(255).withMessage("The bio should have a maximum length of 255");
+        this.ruleFor("birthDate")
+            .notNull().withMessage("The birthdate is required")
+            .must(date => Math.abs(new Date().getTime() - (date?.getTime() || 0)) / (1000 * 60 * 60 * 24 * 365.25) >= 13).withMessage("The user should be 13 years old to register");
+        this.ruleFor("firstname")
+            .notEmpty().withMessage("The firstname is required")
+            .minLength(5).withMessage("The firstname should have a minimum length of 5");
+        this.ruleFor("name")
+            .notEmpty().withMessage("The name is required")
+            .notNull().withMessage("The name is required")
+            .minLength(5).withMessage("The name should have a minimum length of 5");
+        this.ruleFor("password")
+            .notEmpty().withMessage("The password is required")
+            .minLength(10).withMessage("The password should have a minimum length of 10")
+            .must((pwd: string | null | undefined) => /([A-Z]+)/.test(pwd!)).withMessage("The password has to have at least one uppercase letter")
+            .must((pwd: string | null | undefined) => /[a-z]{4,}/.test(pwd!)).withMessage("The password has to have at least four lowercase letters")
+            .must((pwd: string | null | undefined) => /\W+/.test(pwd!)).withMessage("The password has to have at least one special caracter")
+            .must((pwd: string | null | undefined) => /[0-9]+/.test(pwd!)).withMessage("The password has to have at least one number");
+    }
+}
