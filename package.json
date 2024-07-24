@@ -39,6 +39,8 @@
     "class-validator": "^0.14.1",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
+    "fluentvalidation-ts": "^3.2.0",
+    "jest-mocker": "^1.0.0",
     "mockingoose": "^2.16.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
@@ -46,6 +48,7 @@
     "nodemon": "^3.1.4",
     "reflect-metadata": "^0.1.14",
     "routing-controllers": "^0.10.4",
+    "ts-jest-mocker": "^1.0.0",
     "typedi": "^0.10.0"
   }
 }
