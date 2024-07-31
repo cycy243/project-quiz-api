@@ -23,14 +23,7 @@ export class AuthController {
      * @returns     The registered user
      */
   @Post()
-  async register(@UploadedFile('file') file: File, @Body() user: UserDto) {
-    console.log("coucou");
-    
-    console.log("User: " + JSON.stringify(user));
-    console.log("file: " + file.originalname);
-    console.log(user.name);
-    console.log(user.birthDate);
-       
+  async register(@UploadedFile('file') file: File, @Body() user: UserDto) {       
     return await this._service.addUser(user);
   }
 }
