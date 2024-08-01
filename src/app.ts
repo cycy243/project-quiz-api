@@ -4,13 +4,13 @@ import Container from "typedi";
 import { IUserRepository } from "./repository/iUserRepository";
 import { UserRepository } from "./repository/mongo_repository/userRepository";
 import User from "./models/user";
-import IUserAuthService from "./services/iUserService";
+import IUserAuthService from "./services/iUserAuthService";
 import UserAuthService from "./services/implementations/userAuthService";
 import UserCUValidator from "./validator/userCUValidator";
 import { InjectionKey } from "./utils/injection_key";
 import { HttpErrorHandler } from "./middlewares/errorsMiddleware";
 import multer from "multer";
-import IFileSaverService from "./services/IfileSaverService";
+import IFileSaverService from "./services/iFileSaverService";
 import LocalStorageFileServer from "./services/implementations/localStorageFileSaver";
 
 const path = require('path');

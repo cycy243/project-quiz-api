@@ -1,5 +1,5 @@
 import { File } from "koa-multer";
-import IFileSaverService from "../IfileSaverService";
+import IFileSaverService from "../iFileSaverService";
 import { writeFile } from "fs";
 
 export default class LocalStorageFileServer implements IFileSaverService {

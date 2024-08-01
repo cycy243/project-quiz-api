@@ -4,7 +4,7 @@ import IUserAuthService from "../../src/services/iUserAuthService"
 import UserAuthService from "../../src/services/implementations/userAuthService"
 import { DataAccessError } from "../../src/errors/dataAccessError"
 import UserCUValidator from "../../src/validator/userCUValidator"
-import IFileSaverService from "../../src/services/IfileSaverService"
+import IFileSaverService from "../../src/services/iFileSaverService"
 
 describe("UserServiceTests", () => {
     let _mockedUserRepository: Mock<IUserRepository>

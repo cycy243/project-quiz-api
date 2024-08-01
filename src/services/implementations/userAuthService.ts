@@ -8,7 +8,7 @@ import { InjectionKey } from "../../utils/injection_key";
 import UserCUValidator from "../../validator/userCUValidator";
 import { ValidationError } from "../../errors/validationError";
 import { RegisterUserDto } from "../../dto/auth/registerUserDto";
-import IFileSaverService from "../IfileSaverService";
+import IFileSaverService from "../iFileSaverService";
 
 @Service(InjectionKey.USER_SERVICE)
 export default class UserAuthService implements IUserAuthService {
