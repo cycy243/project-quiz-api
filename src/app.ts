@@ -11,7 +11,7 @@ import { InjectionKey } from "./utils/injection_key";
 import { HttpErrorHandler } from "./middlewares/errorsMiddleware";
 import multer from "multer";
 import IFileSaverService from "./services/iFileSaverService";
-import LocalStorageFileServer from "./services/implementations/localStorageFileSaver";
+import LocalStorageFileSaver from "./services/implementations/localStorageFileSaver";
 
 const path = require('path');
 
@@ -22,7 +22,7 @@ const app = express();
 Container.set<IUserRepository>(InjectionKey.USER_REPOSITORY, new UserRepository(User))
 Container.set<UserCUValidator>(InjectionKey.USER_CRUD_VALIDATOR, new UserCUValidator())
 Container.set<HttpErrorHandler>(InjectionKey.ERROR_MIDDLEWARE, new HttpErrorHandler())
-Container.set<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE, new LocalStorageFileServer())
+Container.set<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE, new LocalStorageFileSaver())
 Container.set<IUserAuthService>(InjectionKey.USER_SERVICE, 
     new UserAuthService(Container.get<IUserRepository>(InjectionKey.USER_REPOSITORY), Container.get<UserCUValidator>(InjectionKey.USER_CRUD_VALIDATOR), Container.get<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE))
 )
