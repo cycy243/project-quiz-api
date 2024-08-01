@@ -34,7 +34,7 @@ export default class UserAuthService implements IUserAuthService {
             throw new ResourceAlreadyExistError({ message: `A user with the email: ${dto.email} or the pseudo ${dto.pseudo} already exist` })
         }
         const result = (await this._repository.insert(userMapper.toEntity({...dto, profilePicUri: ""})))!
-        this._fileSaverService.saveFileToPath(dto.avatar!, `avatar/${result.pseudo}-${new Date().getMilliseconds()}`)
+        this._fileSaverService.saveFileToPath(dto.avatar!, `/files/imgs/avatars/${result.pseudo}-${new Date().getMilliseconds()}`)
         return userMapper.toDto(result)
     }
 }
