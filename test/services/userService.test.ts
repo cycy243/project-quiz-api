@@ -4,15 +4,16 @@ import IUserAuthService from "../../src/services/iUserAuthService"
 import UserAuthService from "../../src/services/implementations/userAuthService"
 import { DataAccessError } from "../../src/errors/dataAccessError"
 import UserCUValidator from "../../src/validator/userCUValidator"
-import { rejects } from "assert"
-import { ValidationError } from "../../src/errors/validationError"
+import IFileSaverService from "../../src/services/IfileSaverService"
 
 describe("UserServiceTests", () => {
     let _mockedUserRepository: Mock<IUserRepository>
+    let _mockedFileSaverService: Mock<IFileSaverService>
     let _userService: IUserAuthService
 
     beforeEach(() => {
         _mockedUserRepository = mock<IUserRepository>()
+        _mockedFileSaverService = mock<IFileSaverService>()
 
         _mockedUserRepository.findBy.mockResolvedValueOnce({
             name: "Testkkhjkh",
@@ -25,7 +26,7 @@ describe("UserServiceTests", () => {
             profilePicUri: ""
         })
 
-        _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator())
+        _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator(), _mockedFileSaverService)
     })
 
     describe("when repo throws exceptions then let it slip", () => {
@@ -38,7 +39,7 @@ describe("UserServiceTests", () => {
 
             _mockedUserRepository.findBy.mockResolvedValueOnce(null)
     
-            _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator())
+            _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator(), _mockedFileSaverService)
 
             try {
                 await _userService.registerUser({
