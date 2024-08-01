@@ -3,23 +3,27 @@ import { UserDto } from "../../dto/userDto";
 import ResourceAlreadyExistError from "../../errors/resourceAlreadyExistError";
 import userMapper from "../../mapper/userMapper";
 import { IUserRepository } from "../../repository/iUserRepository";
-import IUserService from "../iUserService";
+import IUserAuthService from "../iUserAuthService";
 import { InjectionKey } from "../../utils/injection_key";
 import UserCUValidator from "../../validator/userCUValidator";
 import { ValidationError } from "../../errors/validationError";
+import { RegisterUserDto } from "../../dto/auth/registerUserDto";
+import IFileSaverService from "../IfileSaverService";
 
 @Service(InjectionKey.USER_SERVICE)
-export default class UserService implements IUserService {
+export default class UserAuthService implements IUserAuthService {
     private _repository: IUserRepository
     private _crudValidator: UserCUValidator
+    private _fileSaverService: IFileSaverService
 
-    constructor(@Inject(InjectionKey.USER_REPOSITORY) repository: IUserRepository, @Inject(InjectionKey.USER_CRUD_VALIDATOR) crudValidator: UserCUValidator) {
+    constructor(@Inject(InjectionKey.USER_REPOSITORY) repository: IUserRepository, @Inject(InjectionKey.USER_CRUD_VALIDATOR) crudValidator: UserCUValidator, @Inject(InjectionKey.FILE_SAVE_SERVICE) fileSaverService: IFileSaverService) {
         this._repository = repository
         this._crudValidator = crudValidator
+        this._fileSaverService = fileSaverService
     }
 
-    async addUser(dto: UserDto): Promise<UserDto | null> {
-        const validationResult = this._crudValidator.validateItem(dto)
+    async registerUser(dto: RegisterUserDto): Promise<UserDto | null> {
+        const validationResult = this._crudValidator.validateItem({...dto, profilePicUri: ""})
         if(validationResult.errors.length > 0) {
             throw new ValidationError("A validation error occured", validationResult.errors)
         }
@@ -29,6 +33,8 @@ export default class UserService implements IUserService {
         if(existingUser) {
             throw new ResourceAlreadyExistError({ message: `A user with the email: ${dto.email} or the pseudo ${dto.pseudo} already exist` })
         }
-        return userMapper.toDto((await this._repository.insert(userMapper.toEntity(dto)))!)
+        const result = (await this._repository.insert(userMapper.toEntity({...dto, profilePicUri: ""})))!
+        this._fileSaverService.saveFileToPath(dto.avatar!, `avatar/${result.pseudo}-${new Date().getMilliseconds()}`)
+        return userMapper.toDto(result)
     }
 }

@@ -1,7 +1,7 @@
 import { mock, Mock } from "ts-jest-mocker"
 import { IUserRepository } from "../../src/repository/iUserRepository"
-import IUserService from "../../src/services/iUserService"
-import UserService from "../../src/services/implementations/userService"
+import IUserAuthService from "../../src/services/iUserAuthService"
+import UserAuthService from "../../src/services/implementations/userAuthService"
 import { DataAccessError } from "../../src/errors/dataAccessError"
 import UserCUValidator from "../../src/validator/userCUValidator"
 import { rejects } from "assert"
@@ -9,7 +9,7 @@ import { ValidationError } from "../../src/errors/validationError"
 
 describe("UserServiceTests", () => {
     let _mockedUserRepository: Mock<IUserRepository>
-    let _userService: IUserService
+    let _userService: IUserAuthService
 
     beforeEach(() => {
         _mockedUserRepository = mock<IUserRepository>()
@@ -25,7 +25,7 @@ describe("UserServiceTests", () => {
             profilePicUri: ""
         })
 
-        _userService = new UserService(_mockedUserRepository, new UserCUValidator())
+        _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator())
     })
 
     describe("when repo throws exceptions then let it slip", () => {
@@ -38,10 +38,10 @@ describe("UserServiceTests", () => {
 
             _mockedUserRepository.findBy.mockResolvedValueOnce(null)
     
-            _userService = new UserService(_mockedUserRepository, new UserCUValidator())
+            _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator())
 
             try {
-                await _userService.addUser({
+                await _userService.registerUser({
                     name: "Testkkhjkh",
                     password: "Password123$",
                     email: "test@mail.com",
@@ -49,7 +49,7 @@ describe("UserServiceTests", () => {
                     pseudo: "test",
                     bio: "tesklkjt",
                     firstname: "testhjkhjgk",
-                    profilePicUri: ""
+                    avatar: null
                 })
                 fail()
             } catch(error) {

@@ -1,16 +1,17 @@
 import { Body, Post, JsonController, UploadedFile } from 'routing-controllers';
-import IUserService from '../services/iUserService';
+import IUserAuthService from '../services/iUserAuthService';
 import { Inject, Service } from 'typedi';
 import { InjectionKey } from '../utils/injection_key';
 import { File } from 'koa-multer';
 import { UserDto } from '../dto/userDto';
+import { RegisterUserDto } from '../dto/auth/registerUserDto';
 
 @Service()
 @JsonController('/auth')
 export class AuthController {
-    private _service: IUserService
+    private _service: IUserAuthService
 
-    constructor(@Inject(InjectionKey.USER_SERVICE) service: IUserService) {
+    constructor(@Inject(InjectionKey.USER_SERVICE) service: IUserAuthService) {
         this._service = service
     }
 
@@ -23,7 +24,7 @@ export class AuthController {
      * @returns     The registered user
      */
   @Post()
-  async register(@UploadedFile('file') file: File, @Body() user: UserDto) {       
-    return await this._service.addUser(user);
+  async register(@UploadedFile('file') file: File, @Body() user: RegisterUserDto) {
+    return await this._service.registerUser({ ...user, avatar: file});
   }
 }
