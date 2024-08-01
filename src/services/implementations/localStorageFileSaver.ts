@@ -2,7 +2,7 @@ import { File } from "koa-multer";
 import IFileSaverService from "../iFileSaverService";
 import { writeFile } from "fs";
 
-export default class LocalStorageFileServer implements IFileSaverService {
+export default class LocalStorageFileSaver implements IFileSaverService {
     saveFileToPath(file: File, path: String): boolean {
         const toPath = path.startsWith("/") ? path : "/" + path
         writeFile("/files/imgs" + toPath, file.buffer, (err) => {
