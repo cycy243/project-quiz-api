@@ -24,8 +24,6 @@ describe("UserCrudValidator", () => {
         it("All user information are valid", () => {
             const result = validator.validateItem(dto)
 
-            console.info(result)
-
             expect(result.isSuccess).toBeTruthy()
         })
     })
