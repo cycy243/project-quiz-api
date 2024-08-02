@@ -5,7 +5,7 @@ import userMapper from "../../mapper/userMapper";
 import { IUserRepository } from "../../repository/iUserRepository";
 import IUserAuthService from "../iUserAuthService";
 import { InjectionKey } from "../../utils/injection_key";
-import UserCUValidator from "../../validator/userCUValidator";
+import RegisterUserValidator from "../../validator/registerUserValidator";
 import { ValidationError } from "../../errors/validationError";
 import { RegisterUserDto } from "../../dto/auth/registerUserDto";
 import IFileSaverService from "../iFileSaverService";
@@ -13,10 +13,10 @@ import IFileSaverService from "../iFileSaverService";
 @Service(InjectionKey.USER_SERVICE)
 export default class UserAuthService implements IUserAuthService {
     private _repository: IUserRepository
-    private _crudValidator: UserCUValidator
+    private _crudValidator: RegisterUserValidator
     private _fileSaverService: IFileSaverService
 
-    constructor(@Inject(InjectionKey.USER_REPOSITORY) repository: IUserRepository, @Inject(InjectionKey.USER_CRUD_VALIDATOR) crudValidator: UserCUValidator, @Inject(InjectionKey.FILE_SAVE_SERVICE) fileSaverService: IFileSaverService) {
+    constructor(@Inject(InjectionKey.USER_REPOSITORY) repository: IUserRepository, @Inject(InjectionKey.USER_CRUD_VALIDATOR) crudValidator: RegisterUserValidator, @Inject(InjectionKey.FILE_SAVE_SERVICE) fileSaverService: IFileSaverService) {
         this._repository = repository
         this._crudValidator = crudValidator
         this._fileSaverService = fileSaverService

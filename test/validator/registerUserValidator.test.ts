@@ -1,12 +1,13 @@
+import { RegisterUserDto } from "../../src/dto/auth/registerUserDto"
 import { UserDto } from "../../src/dto/userDto"
-import UserCUValidator from "../../src/validator/userCUValidator"
+import RegisterUserValidator from "../../src/validator/registerUserValidator"
 
 describe("UserCrudValidator", () => {
-    let validator: UserCUValidator
-    let dto: UserDto
+    let validator: RegisterUserValidator
+    let dto: RegisterUserDto
 
     beforeEach(() => {
-        validator = new UserCUValidator()
+        validator = new RegisterUserValidator()
         dto = {
             name: "Testkkhjkh",
             password: "Password123$",
@@ -15,7 +16,7 @@ describe("UserCrudValidator", () => {
             pseudo: "test",
             bio: "tesklkjt",
             firstname: "testhjkhjgk",
-            profilePicUri: ""
+            avatar: null
         }
     })
 

@@ -3,12 +3,13 @@ import { UserDto } from "../dto/userDto";
 import { BaseValidator } from "./baseValidator";
 import { Service } from "typedi";
 import { InjectionKey } from "../utils/injection_key";
+import { RegisterUserDto } from "../dto/auth/registerUserDto";
 
 /**
  * A validator for validating user dto for update and create operation.
  */
 @Service(InjectionKey.USER_CRUD_VALIDATOR)
-export default class UserCUValidator extends BaseValidator<UserDto> {
+export default class RegisterUserValidator extends BaseValidator<RegisterUserDto> {
     constructor() {
         super();
 

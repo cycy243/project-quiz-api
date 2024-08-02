@@ -3,7 +3,7 @@ import { IUserRepository } from "../../src/repository/iUserRepository"
 import IUserAuthService from "../../src/services/iUserAuthService"
 import UserAuthService from "../../src/services/implementations/userAuthService"
 import { DataAccessError } from "../../src/errors/dataAccessError"
-import UserCUValidator from "../../src/validator/userCUValidator"
+import RegisterUserValidator from "../../src/validator/registerUserValidator"
 import IFileSaverService from "../../src/services/iFileSaverService"
 
 describe("UserServiceTests", () => {
@@ -26,7 +26,9 @@ describe("UserServiceTests", () => {
             profilePicUri: ""
         })
 
-        _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator(), _mockedFileSaverService)
+        _mockedFileSaverService.saveFileToPath.mockReturnValue("file.png")
+
+        _userService = new UserAuthService(_mockedUserRepository, new RegisterUserValidator(), _mockedFileSaverService)
     })
 
     describe("when repo throws exceptions then let it slip", () => {
@@ -39,7 +41,7 @@ describe("UserServiceTests", () => {
 
             _mockedUserRepository.findBy.mockResolvedValueOnce(null)
     
-            _userService = new UserAuthService(_mockedUserRepository, new UserCUValidator(), _mockedFileSaverService)
+            _userService = new UserAuthService(_mockedUserRepository, new RegisterUserValidator(), _mockedFileSaverService)
 
             try {
                 await _userService.registerUser({
@@ -53,7 +55,7 @@ describe("UserServiceTests", () => {
                     avatar: null
                 })
                 fail()
-            } catch(error) {
+            } catch(error) {                
                 expect(error instanceof DataAccessError).toBeTruthy()
             }
         })
