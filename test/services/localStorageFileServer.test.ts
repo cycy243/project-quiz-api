@@ -50,7 +50,6 @@ describe("LocalStorageFileServerTests", () => {
                 _fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg", filename: "test.svg"  } as multer.File, testFilesFolderPath + '/file.svg')
                 expect(true).toBeFalsy()
             } catch(error) {
-                console.log(error);
                 
                 expect(error instanceof PathAlreadyExistError).toBeTruthy()
             }
