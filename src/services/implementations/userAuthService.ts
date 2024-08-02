@@ -9,6 +9,8 @@ import RegisterUserValidator from "../../validator/registerUserValidator";
 import { ValidationError } from "../../errors/validationError";
 import { RegisterUserDto } from "../../dto/auth/registerUserDto";
 import IFileSaverService from "../iFileSaverService";
+import { getFilesRootFolder } from "../../librairies/paths";
+import { join, resolve } from "path";
 
 @Service(InjectionKey.USER_SERVICE)
 export default class UserAuthService implements IUserAuthService {
@@ -33,9 +35,11 @@ export default class UserAuthService implements IUserAuthService {
         if(existingUser) {
             throw new ResourceAlreadyExistError({ message: `A user with the email: ${dto.email} or the pseudo ${dto.pseudo} already exist` })
         }
-        const filePath = `/files/imgs/avatars/${dto.pseudo}-${new Date().getUTCMilliseconds()}`
-        this._fileSaverService.saveFileToPath(dto.avatar!, filePath)
-        const result = (await this._repository.insert(userMapper.toEntity({...dto, profilePicUri: filePath})))!
+        const filePath = resolve(`./public/files/imgs/avatars`)
+        console.log(filePath);
+        
+        const conversion = {...dto, profilePicUri: 'files/imgs/avatars/' + this._fileSaverService.saveFileToPath(dto.avatar!, filePath, `${dto.pseudo}-${new Date().getUTCMilliseconds()}`) }
+        const result = (await this._repository.insert(userMapper.toEntity(conversion)))!
         return userMapper.toDto(result)
     }
 }
