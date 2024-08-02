@@ -1,4 +1,4 @@
-import { useContainer, useExpressServer } from "routing-controllers";
+import { createExpressServer, useContainer, useExpressServer } from "routing-controllers";
 import "reflect-metadata";
 import Container from "typedi";
 import { IUserRepository } from "./repository/iUserRepository";
@@ -17,8 +17,6 @@ const path = require('path');
 
 const express = require('express');
 
-const app = express();
-
 Container.set<IUserRepository>(InjectionKey.USER_REPOSITORY, new UserRepository(User))
 Container.set<RegisterUserValidator>(InjectionKey.USER_CRUD_VALIDATOR, new RegisterUserValidator())
 Container.set<HttpErrorHandler>(InjectionKey.ERROR_MIDDLEWARE, new HttpErrorHandler())
@@ -29,6 +27,8 @@ Container.set<IUserAuthService>(InjectionKey.USER_SERVICE,
 
 useContainer(Container)
 
+const app = express()
+
 useExpressServer(app, {
     cors: true,
     defaultErrorHandler: false,
@@ -36,5 +36,11 @@ useExpressServer(app, {
     // register created express server in routing-controllers
     controllers: [path.join(__dirname + '/controller/*.ts')], // and configure it the way you need (controllers, validation, etc.)
 });
+
+/**
+ * if the '/files' isn't mentionned, the routeur will serve the files from the directory under the directory '/img'
+ * We'll need to do '[server_ip]/img' even though we want to do '[server_ip]/files'
+ */
+app.use(express.static(path.join(__dirname, '../public')))
 
 module.exports = app
