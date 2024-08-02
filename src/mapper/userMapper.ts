@@ -23,7 +23,7 @@ function toEntity(user: UserDto): IUser {
         email: user.email || "",
         pseudo: user.pseudo || "",
         profilePicUri: user.profilePicUri || "",
-        password: ""
+        password: (user as any).password || ""
     }
 }
 
