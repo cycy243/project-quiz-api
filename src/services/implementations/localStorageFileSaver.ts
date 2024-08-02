@@ -6,11 +6,11 @@ import NonExistentPathError from "../errors/nonExistentPathError";
 import PathAlreadyExistError from "../errors/pathalreadtExistError";
 
 export default class LocalStorageFileSaver implements IFileSaverService {
-    saveFileToPath(file: File, path: string): string {
-        if(!existsSync(dirname(path))) {
-            throw new NonExistentPathError(`There is no such directory as ${dirname(path)}`)
+    saveFileToPath(file: File, path: string, filename: string): string {
+        if(!existsSync(path)) {
+            throw new NonExistentPathError(`There is no such directory as ${path}`)
         }
-        const fullPath = this.generatePathFile(file, path)
+        const fullPath = this.generatePathFile(file, path, filename)
         if(existsSync(`${fullPath}`)) {
             throw new PathAlreadyExistError(`The path [${path}] already exists.`)
         }
@@ -19,12 +19,11 @@ export default class LocalStorageFileSaver implements IFileSaverService {
                 throw new Error((err as any).message)
             }            
         })
-        return fullPath;
+        return basename(fullPath);
     }
 
-    private generatePathFile(file: File, path: string): string {
-        const fileName = basename(`${path}`);
-        return `${join(dirname(`${path}`), fileName.substring(0, fileName.lastIndexOf('.')))}${extname(file.filename)}`
+    private generatePathFile(file: File, path: string, filename: string): string {
+        return resolve(path, `${filename}${extname(file.originalname)}`)
     }
 
 }
