@@ -1,4 +1,5 @@
 import { UserDto } from "../dto/userDto";
+import { getFilesRootFolder } from "../librairies/paths";
 import { IUser } from "../models/user";
 
 function toDto(user: IUser): UserDto {
@@ -9,7 +10,7 @@ function toDto(user: IUser): UserDto {
         firstname: user.firstname.toString(),
         email: user.email.toString(),
         pseudo: user.pseudo.toString(),
-        profilePicUri: user.profilePicUri.toString()
+        profilePicUri: `${getFilesRootFolder()}/${user.profilePicUri.toString()}`
     }
 }
 
