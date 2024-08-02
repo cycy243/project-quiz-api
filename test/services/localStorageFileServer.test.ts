@@ -25,7 +25,7 @@ describe("LocalStorageFileServerTests", () => {
         it('when path exist then save file', async () => {
             const filePath = testFilesFolderPath + '/file.svg'
             const data = fs.readFileSync(filePath, 'utf8');
-            expect(_fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg", filename: "test.svg" } as multer.File, testFilesFolderPath + '/test_result_file.svg')).toBe(resolve(testFilesFolderPath, 'test_result_file.svg'))
+            expect(_fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg", filename: "test.svg" } as multer.File, testFilesFolderPath, 'test_result_file')).toBe('test_result_file.svg')
             await sleep(1000)
             expect(fs.existsSync(testFilesFolderPath + "/test_result_file.svg")).toBeTruthy()
         })
@@ -36,7 +36,7 @@ describe("LocalStorageFileServerTests", () => {
             try {                
                 const filePath = testFilesFolderPath + '/file.svg'
                 const data = fs.readFileSync(filePath, 'utf8');
-                _fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg",  } as multer.File, testFilesFolderPath + '/unknow_dir' + '/test_result_file.svg')
+                _fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg",  } as multer.File, testFilesFolderPath + '/unknow_dir', 'test_result_file')
                 expect(true).toBeFalsy()
             } catch(error) {
                 expect(error instanceof NonExistentPathError).toBeTruthy()
@@ -47,7 +47,7 @@ describe("LocalStorageFileServerTests", () => {
             try {                
                 const filePath = testFilesFolderPath + '/file.svg'
                 const data = fs.readFileSync(filePath, 'utf8');
-                _fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg", filename: "test.svg"  } as multer.File, testFilesFolderPath + '/file.svg')
+                _fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg", filename: "test.svg"  } as multer.File, testFilesFolderPath, 'file')
                 expect(true).toBeFalsy()
             } catch(error) {
                 
@@ -74,7 +74,7 @@ function deleteTestsFiles() {
         .map((fileName: string) => {
           return path.join(testFilesFolderPath, fileName);
         })
-        .filter((filePath: string) => isFile(filePath) && path.basename(filePath).startsWith('test_result'));
+        .filter((filePath: string) => path.basename(filePath).startsWith('test_result'));
     testFolderFiles.forEach(filePath => {
         fs.unlink(filePath, (err) => {
             if (err) {
