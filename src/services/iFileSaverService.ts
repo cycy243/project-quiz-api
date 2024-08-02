@@ -6,7 +6,7 @@ export default interface IFileSaverService {
      * 
      * @param file  file to save
      * 
-     * @returns     The fullpath to the file if the file has been correctly saved
+     * @returns     The filename pf the file if the file has been correctly saved
      */
-    saveFileToPath(file: File, path: string): string;
+    saveFileToPath(file: File, path: string, filename: string): string;
 }
