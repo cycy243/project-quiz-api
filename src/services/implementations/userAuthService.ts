@@ -29,14 +29,12 @@ export default class UserAuthService implements IUserAuthService {
         if(validationResult.errors.length > 0) {
             throw new ValidationError("A validation error occured", validationResult.errors)
         }
-        console.log(dto);
         
         const existingUser = await this._repository.findBy({ email: dto.email || "", pseudo: dto.pseudo || "" })
         if(existingUser) {
             throw new ResourceAlreadyExistError({ message: `A user with the email: ${dto.email} or the pseudo ${dto.pseudo} already exist` })
         }
         const filePath = resolve(`./public/files/imgs/avatars`)
-        console.log(filePath);
         
         //  the img folder will be served under the path 'img' instead of 'public/file/img'
         const conversion = {...dto, profilePicUri: 'img/avatars/' + this._fileSaverService.saveFileToPath(dto.avatar!, filePath, `${dto.pseudo}-${new Date().getUTCMilliseconds()}`) }
