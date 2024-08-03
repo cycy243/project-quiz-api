@@ -25,7 +25,7 @@ export default class UserAuthService implements IUserAuthService {
     }
 
     async registerUser(dto: RegisterUserDto): Promise<UserDto | null> {
-        const validationResult = this._crudValidator.validateItem({...dto, profilePicUri: ""})
+        const validationResult = this._crudValidator.validateItem(dto)
         if(validationResult.errors.length > 0) {
             throw new ValidationError("A validation error occured", validationResult.errors)
         }
