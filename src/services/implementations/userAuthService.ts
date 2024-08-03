@@ -38,7 +38,8 @@ export default class UserAuthService implements IUserAuthService {
         const filePath = resolve(`./public/files/imgs/avatars`)
         console.log(filePath);
         
-        const conversion = {...dto, profilePicUri: 'files/imgs/avatars/' + this._fileSaverService.saveFileToPath(dto.avatar!, filePath, `${dto.pseudo}-${new Date().getUTCMilliseconds()}`) }
+        //  the img folder will be served under the path 'img' instead of 'public/file/img'
+        const conversion = {...dto, profilePicUri: 'img/avatars/' + this._fileSaverService.saveFileToPath(dto.avatar!, filePath, `${dto.pseudo}-${new Date().getUTCMilliseconds()}`) }
         const result = (await this._repository.insert(userMapper.toEntity(conversion)))!
         return userMapper.toDto(result)
     }

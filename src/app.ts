@@ -41,6 +41,6 @@ useExpressServer(app, {
  * if the '/files' isn't mentionned, the routeur will serve the files from the directory under the directory '/img'
  * We'll need to do '[server_ip]/img' even though we want to do '[server_ip]/files'
  */
-app.use(express.static(path.join(__dirname, '../public')))
+app.use('/img', express.static(path.join(__dirname, '../public/files/imgs')))
 
 module.exports = app
