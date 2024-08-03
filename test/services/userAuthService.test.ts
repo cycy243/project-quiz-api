@@ -6,7 +6,7 @@ import { DataAccessError } from "../../src/errors/dataAccessError"
 import RegisterUserValidator from "../../src/validator/registerUserValidator"
 import IFileSaverService from "../../src/services/iFileSaverService"
 
-describe("UserServiceTests", () => {
+describe("UserAuthServiceTests", () => {
     let _mockedUserRepository: Mock<IUserRepository>
     let _mockedFileSaverService: Mock<IFileSaverService>
     let _userService: IUserAuthService
