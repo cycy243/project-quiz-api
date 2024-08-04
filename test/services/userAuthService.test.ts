@@ -5,6 +5,7 @@ import UserAuthService from "../../src/services/implementations/userAuthService"
 import { DataAccessError } from "../../src/errors/dataAccessError"
 import RegisterUserValidator from "../../src/validator/registerUserValidator"
 import IFileSaverService from "../../src/services/iFileSaverService"
+import multer from "koa-multer"
 
 describe("UserAuthServiceTests", () => {
     let _mockedUserRepository: Mock<IUserRepository>
@@ -52,7 +53,7 @@ describe("UserAuthServiceTests", () => {
                     pseudo: "test",
                     bio: "tesklkjt",
                     firstname: "testhjkhjgk",
-                    avatar: null
+                    avatar: { originalname: "file.jpg", filename: "file.jpg", mimetype: "image/jpg" } as multer.File
                 })
                 fail()
             } catch(error) {                

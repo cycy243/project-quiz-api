@@ -4,6 +4,10 @@ import { BaseValidator } from "./baseValidator";
 import { Service } from "typedi";
 import { InjectionKey } from "../utils/injection_key";
 import { RegisterUserDto } from "../dto/auth/registerUserDto";
+import multer from "koa-multer";
+
+const VALID_FILE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/jpg']
+const MAX_SIZE = 1024 * 1024 * 20
 
 /**
  * A validator for validating user dto for update and create operation.
@@ -37,5 +41,17 @@ export default class RegisterUserValidator extends BaseValidator<RegisterUserDto
             .must((pwd: string | null | undefined) => /[a-z]{4,}/.test(pwd!)).withMessage("The password has to have at least four lowercase letters")
             .must((pwd: string | null | undefined) => /\W+/.test(pwd!)).withMessage("The password has to have at least one special caracter")
             .must((pwd: string | null | undefined) => /[0-9]+/.test(pwd!)).withMessage("The password has to have at least one number");
+        this.ruleFor('avatar')
+            .notNull().withMessage("User must have an avatar")
+            .must((value: multer.File | null | undefined) => {
+                // Validation of the type of the avatar img
+                console.log(value?.mimetype);
+                
+                return VALID_FILE_TYPES.includes(value?.mimetype || '')
+            })
+            .must((value: multer.File | null | undefined) => {
+                // Validation of the size of the avatar img
+                return (value?.size || 0) <= MAX_SIZE
+            })
     }
 }
