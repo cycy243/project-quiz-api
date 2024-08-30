@@ -26,7 +26,7 @@ describe("LocalStorageFileServerTests", () => {
             const filePath = testFilesFolderPath + '/file.svg'
             const data = fs.readFileSync(filePath, 'utf8');
             expect(_fileSaverService.saveFileToPath({ buffer: Buffer.from(data), originalname: "test.svg", filename: "test.svg" } as multer.File, testFilesFolderPath, 'test_result_file')).toBe('test_result_file.svg')
-            await sleep(1000)
+            await sleep(100)
             expect(fs.existsSync(testFilesFolderPath + "/test_result_file.svg")).toBeTruthy()
         })
     })
