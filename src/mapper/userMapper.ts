@@ -5,7 +5,7 @@ import { IUser } from "../models/user";
 function toDto(user: IUser): UserDto {
     return {
         bio: user.bio.toString(),
-        birthDate: user.birthDate.toDateString(),
+        birthDate: user.birthDate.toISOString(),
         name: user.name.toString(),
         firstname: user.firstname.toString(),
         email: user.email.toString(),
