@@ -12,6 +12,11 @@ import { HttpErrorHandler } from "./middlewares/errorsMiddleware";
 import multer from "multer";
 import IFileSaverService from "./services/iFileSaverService";
 import LocalStorageFileSaver from "./services/implementations/localStorageFileSaver";
+import ITokenGenerator from "./services/utils/iTokenGenerator";
+import BearerTokenGenerator from "./services/utils/implementations/bearerTokenGenerator";
+import { config } from './librairies/config';
+
+config();
 
 const path = require('path');
 
@@ -21,8 +26,12 @@ Container.set<IUserRepository>(InjectionKey.USER_REPOSITORY, new UserRepository(
 Container.set<RegisterUserValidator>(InjectionKey.USER_CRUD_VALIDATOR, new RegisterUserValidator())
 Container.set<HttpErrorHandler>(InjectionKey.ERROR_MIDDLEWARE, new HttpErrorHandler())
 Container.set<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE, new LocalStorageFileSaver())
+Container.set<ITokenGenerator>(InjectionKey.TOKEN_GENERATOR_SERVICE, new BearerTokenGenerator(process.env.BEARER_TOKEN_AUDIENCE!, process.env.BEARER_TOKEN_ISSUER!, process.env.BEARER_TOKEN_VALIDITY!, process.env.BEARER_TOKEN_SECRET!));
 Container.set<IUserAuthService>(InjectionKey.USER_SERVICE, 
-    new UserAuthService(Container.get<IUserRepository>(InjectionKey.USER_REPOSITORY), Container.get<RegisterUserValidator>(InjectionKey.USER_CRUD_VALIDATOR), Container.get<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE))
+    new UserAuthService(Container.get<IUserRepository>(InjectionKey.USER_REPOSITORY), 
+    Container.get<RegisterUserValidator>(InjectionKey.USER_CRUD_VALIDATOR), 
+    Container.get<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE), 
+    Container.get<ITokenGenerator>(InjectionKey.TOKEN_GENERATOR_SERVICE))
 )
 
 useContainer(Container)
