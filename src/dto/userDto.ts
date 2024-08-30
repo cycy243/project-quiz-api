@@ -5,5 +5,6 @@ export type UserDto = {
     pseudo: string | null,
     bio: string | null,
     firstname: string,
-    profilePicUri: string | null
+    profilePicUri: string | null,
+    token?: string
 }
