@@ -5,6 +5,7 @@ import ResourceAlreadyExistError from "../errors/resourceAlreadyExistError";
 import { ExpressErrorMiddlewareInterface, HttpError, Middleware } from "routing-controllers";
 import { Service } from "typedi";
 import { InjectionKey } from "../utils/injection_key";
+import NoUserFoundError from "../services/errors/noUserFoundError";
 
 class ApiError {
     constructor(
@@ -24,6 +25,8 @@ export class HttpErrorHandler implements ExpressErrorMiddlewareInterface {
             apiError = new ApiError(400, "Validation errors", "One or more validation error occured", (error as ValidationError).errors)
         } else if(error instanceof ResourceAlreadyExistError) {
             apiError = new ApiError(409, "Conflict detected", error.message)
+        } else if(error instanceof NoUserFoundError) {
+            apiError = new ApiError(404, "No user found", "The given user wasn't found")
         }
         response.status(apiError.code).send(apiError)
         next(error);
