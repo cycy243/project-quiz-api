@@ -13,7 +13,8 @@ export default class BearerTokenGenerator implements ITokenGenerator {
     private generateTokenPayload(user: UserDto): object {
         return {
             pseudo: user.pseudo,
-            email: user.email
+            email: user.email,
+            roles: [ 'USER' ]
         }
     }
 

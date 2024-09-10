@@ -1,4 +1,4 @@
-import { Body, Post, JsonController, UploadedFile } from 'routing-controllers';
+import { Body, Post, JsonController, UploadedFile, Get, Authorized } from 'routing-controllers';
 import IUserAuthService from '../services/iUserAuthService';
 import { Inject, Service } from 'typedi';
 import { InjectionKey } from '../utils/injection_key';
@@ -39,5 +39,17 @@ export class AuthController {
   @Post("/connect")
   async connectUser(@Body() user: ConnectUserDto) {
     return await this._service.connectUserWithLogin(user);
+  }
+
+  @Authorized()
+  @Get('/authorized_request')
+  unaGetto() {
+    return "Hello World";
+  }
+
+  @Authorized('ADMIN')
+  @Get('/authorized_admin_request')
+  unaGettoAdmin() {
+    return "Hello World";
   }
 }
