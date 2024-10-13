@@ -12,4 +12,7 @@
     },
     "include": ["src/**/*.ts","test/**/*.ts"],
     "exclude": ["node_modules"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
   }
