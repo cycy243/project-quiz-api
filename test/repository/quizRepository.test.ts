@@ -1,25 +1,14 @@
-const mockingoose = require('mockingoose');
-
-import { MongooseError } from 'mongoose';
+import mongoose, { MongooseError } from 'mongoose';
 import { DataAccessError } from '../../src/errors/dataAccessError';
 import Quiz, { IQuiz } from '../../src/models/quiz';
 import QuizRepository from '../../src/repository/mongo_repository/quizRepository';
 
-import { dbConnect, dbDisconnect } from '../utils/dbHandlerUtils'
 import IQuestion from '../../src/models/question';
 
 describe("QuizRepositoryTests", () => {
 
-  beforeAll(async () => await dbConnect(), 20000);
-  afterAll(async () => {
-    dbDisconnect()
-  });
-
-  beforeEach(() => {
-      mockingoose.resetAll();
-    });
-
     describe("Insert quiz test", () => {
+
       it("When doc is added then return it and its id", async () => {
           const _doc: IQuiz = {
             title: 'name',
@@ -55,16 +44,38 @@ describe("QuizRepositoryTests", () => {
         expect(question.anwsers).toHaveLength(questionDoc.anwsers.length);
         expect(question.correctAnswerIndex).toBe(questionDoc.correctAnswerIndex);
         expect(question.question).toBe(questionDoc.question);
-    })
+      })
 
-      it("When an error related to mongoose is thrown doesn't expose it to other layer", async () => {
+      describe('Repository "mask" database error',() => {
+        it("When an error related to data validation occured in mongoose then wrap throw DataAccessError", async () => {
+          const _doc: any = {
+            title: 'name',
+            questions: Array<IQuestion>(0)
+          };
+      
+          const service = new QuizRepository()
+
+          try {
+            await service.insert(_doc as IQuiz)
+            expect(false).toBeTruthy()
+          } catch(error) {
+            const result = error instanceof DataAccessError;
+            
+            expect(result).toBeTruthy()
+          }
+        })
+        
+        it("When an error related to mongoose is thrown doesn't expose it to other layer", async () => {
           const _doc: IQuiz = {
             title: 'name',
-            description: 'name@email.com',
-            questions:[]
+            description: "dhfkhdhldhfldhf",
+            questions: []
           };
-        
-          mockingoose.Quiz.toReturn(new MongooseError(""), "save")
+
+          const methodSave = Quiz.prototype.save
+          Quiz.prototype.save = jest.fn().mockImplementationOnce(() => {
+            throw new MongooseError("Simulated save error");
+          });
       
           const service = new QuizRepository()
 
@@ -72,12 +83,54 @@ describe("QuizRepositoryTests", () => {
             await service.insert(_doc)
             expect(false).toBeTruthy()
           } catch(error) {
-            console.log(error);
-            
             const result = error instanceof DataAccessError;
             
             expect(result).toBeTruthy()
           }
+          Quiz.prototype.save = methodSave
+        })
+      })
+
+      describe("search quiz", () => {
+        it("When search by title and title exist then return every item with title like the given one", async ()=> {
+          // Arrange
+          const _doc: IQuiz = {
+            title: 'Test title',
+            description: 'Test description',
+            questions: []
+          };
+      
+          const service = new QuizRepository()
+          await service.insert(_doc);
+          await service.insert({ ..._doc, title: "Coucou title" });
+          await new Promise((r) => setTimeout(r, 2000));
+
+          // Act
+          const searchResults = await service.search({ title: "title" })
+          
+          // Assert
+          expect(searchResults).toHaveLength(2)
+        })
+        
+        it("When search by title and title doesn't exist then return empty arry", async ()=> {
+          // Arrange
+          const _doc: IQuiz = {
+            title: 'Test title',
+            description: 'Test description',
+            questions: []
+          };
+      
+          const service = new QuizRepository()
+          await service.insert(_doc);
+          await service.insert({ ..._doc, title: "Coucou title" });
+          await new Promise((r) => setTimeout(r, 2000));
+
+          // Act
+          const searchResults = await service.search({ title: "tété" })
+          
+          // Assert
+          expect(searchResults).toHaveLength(0)
+        })
       })
     })
 })
