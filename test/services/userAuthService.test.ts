@@ -155,8 +155,6 @@ describe("UserAuthServiceTests", () => {
                     password: new String(bcrypt.hashSync("Password123$", HASH_SALT)),
                     profilePicUri: ""
                 })
-        
-                console.log(`Test: user password ==> ${user.password}`);
                 _userService = new UserAuthService(_mockedUserRepository, new RegisterUserValidator(), _mockedFileSaverService, _mockedTokenGenerator)
 
                 expect((await _userService.connectUserWithLogin(user!))?.email).toBe("test@mail.com")

@@ -45,8 +45,6 @@ export default class RegisterUserValidator extends BaseValidator<RegisterUserDto
             .notNull().withMessage("User must have an avatar")
             .must((value: multer.File | null | undefined) => {
                 // Validation of the type of the avatar img
-                console.log(value?.mimetype);
-                
                 return VALID_FILE_TYPES.includes(value?.mimetype || '')
             })
             .must((value: multer.File | null | undefined) => {
