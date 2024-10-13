@@ -17,6 +17,9 @@ import BearerTokenGenerator from "./services/utils/implementations/bearerTokenGe
 import { config } from './librairies/config';
 import ITokenValidator from "./services/utils/iTokenValidator";
 import BearerTokenValidator from "./services/utils/implementations/bearerTokenValidator";
+import Quiz from "./models/quiz";
+import IQuizRepository from "./repository/iQuizRepository";
+import QuizRepository from "./repository/mongo_repository/quizRepository";
 
 config();
 
@@ -25,6 +28,7 @@ const path = require('path');
 const express = require('express');
 
 Container.set<IUserRepository>(InjectionKey.USER_REPOSITORY, new UserRepository(User))
+Container.set<IQuizRepository>(InjectionKey.QUIZ_REPOSITORY, new QuizRepository())
 Container.set<RegisterUserValidator>(InjectionKey.USER_CRUD_VALIDATOR, new RegisterUserValidator())
 Container.set<HttpErrorHandler>(InjectionKey.ERROR_MIDDLEWARE, new HttpErrorHandler())
 Container.set<IFileSaverService>(InjectionKey.FILE_SAVE_SERVICE, new LocalStorageFileSaver())
